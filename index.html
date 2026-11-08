@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR"data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Alarme 12×36</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#0e131a;--card:#141b25;--card2:#1b2431;--tx:#eef2f7;--mut:#8b97a8;--bd:#223042;--ac:#3b82f6;--acs:#3b82f61f;--off:#2dd4bf;color-scheme:dark}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#eef2f7;--card:#fff;--card2:#e8eef6;--tx:#0f1722;--mut:#5b6879;--bd:#d5dde8;--ac:#2563eb;--acs:#2563eb1a;--off:#0d9488;color-scheme:light}}
+:root[data-theme="dark"]{--bg:#0e131a;--card:#141b25;--card2:#1b2431;--tx:#eef2f7;--mut:#8b97a8;--bd:#223042;--ac:#3b82f6;--acs:#3b82f61f;--off:#2dd4bf}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:480px;margin:0 auto;padding:18px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.top h1{font-size:18px;font-weight:600;margin:0}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:22px;padding:20px;margin-bottom:14px}
+.hero{text-align:center;background:linear-gradient(160deg,var(--card),var(--acs))}
+.clock{font-size:clamp(46px,16vw,70px);font-weight:500;letter-spacing:1px;font-variant-numeric:tabular-nums}
+.lbl{font-size:11px;letter-spacing:.3em;color:var(--mut);text-transform:uppercase}
+.state{font-size:38px;font-weight:600;margin:6px 0}
+.state.work{color:var(--ac)}.state.off{color:var(--off)}
+.sub{color:var(--mut)}
+.ref{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--bd);margin-top:18px;padding-top:16px;color:var(--mut);gap:10px;text-align:left}
+input,select{background:var(--card2);color:var(--tx);border:1px solid var(--bd);border-radius:12px;padding:9px 12px;font:inherit;max-width:100%}
+.row{display:flex;justify-content:space-between;align-items:center}
+.next{font-size:54px;font-weight:500;margin:8px 0 2px;font-variant-numeric:tabular-nums}
+button{font:inherit;color:var(--tx);cursor:pointer}
+.ghost{background:none;border:0;color:var(--mut);display:flex;gap:6px;align-items:center}
+.days{display:flex;gap:8px;overflow-x:auto;padding:12px 0 6px;max-width:100%}
+.day{flex:0 0 auto;width:52px;padding:8px 0;border:1px solid var(--bd);border-radius:14px;text-align:center;background:var(--card2)}
+.day small{display:block;font-size:10px;color:var(--mut);letter-spacing:.08em}
+.day b{display:block;font-size:17px;margin:3px 0;font-weight:500}
+.day i{display:block;width:6px;height:6px;border-radius:50%;margin:0 auto}
+.day.work b{color:var(--ac)}.day.work i{background:var(--ac)}
+.day.off b{color:var(--off)}.day.off i{background:var(--off)}
+.day.today{border-color:var(--mut)}
+.leg{font-size:12px;color:var(--mut);display:flex;gap:12px}
+.leg span:before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;background:currentColor}
+.al{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--bd)}
+.al input[type=time]{font-size:22px;background:none;border:0;padding:0;width:112px}
+.badge{font-size:11px;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--ac);color:var(--ac);border-radius:999px;padding:5px 10px}
+.badge.off{border-color:var(--off);color:var(--off)}.badge.all{border-color:var(--mut);color:var(--mut)}
+.sp{flex:1}
+.tg{width:50px;height:30px;border-radius:999px;background:var(--card2);border:1px solid var(--bd);position:relative;padding:0}
+.tg:after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--mut);transition:.2s}
+.tg.on{background:var(--ac);border-color:var(--ac)}.tg.on:after{left:23px;background:#fff}
+.btn{width:100%;padding:14px;border-radius:14px;background:var(--card2);border:1px solid var(--bd);margin-top:12px}
+.btn.pri{background:var(--ac);border-color:var(--ac);color:#fff;font-weight:600}
+.form{display:none;margin-top:12px;gap:10px;flex-direction:column}.form.open{display:flex}
+.seg{display:flex;gap:6px}.seg button{flex:1;padding:10px 4px;border-radius:12px;background:var(--card2);border:1px solid var(--bd);font-size:14px}
+.seg button.sel{border-color:var(--ac);background:var(--acs);color:var(--ac)}
+.snd{display:flex;align-items:center;gap:14px;padding:14px 0;border-top:1px solid var(--bd)}
+.pl{width:44px;height:44px;border-radius:50%;border:1px solid var(--bd);background:var(--card2);flex:0 0 auto}
+.pl.on{background:var(--ac);border-color:var(--ac);color:#fff}
+.snd .t{flex:1;min-width:0}.snd .t b{font-weight:500;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.snd .t span{font-size:13px;color:var(--mut)}
+.rd{width:26px;height:26px;border-radius:50%;border:2px solid var(--bd);flex:0 0 auto;background:none;padding:0}
+.rd.sel{background:var(--ac);border-color:var(--ac);color:#fff;font-size:14px;line-height:20px}
+.drop{border:1px dashed var(--bd);border-radius:16px;padding:16px;margin:14px 0 6px}
+.drop b{display:block;font-weight:500}.drop span{font-size:13px;color:var(--mut)}
+.foot{text-align:center;color:var(--mut);font-size:13px;margin-top:20px}
+#ring{position:fixed;inset:0;background:var(--bg);z-index:20;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center}
+#ring.open{display:flex}
+#ring .big{font-size:76px;font-weight:500;color:var(--ac);animation:p 1s infinite}
+@keyframes p{50%{opacity:.45}}
+#ring .btn{max-width:320px}
+</style>
+</head>
+<body>
+<main>
+<div class="top"><h1>Alarme 12×36</h1><span class="mono sub" id="tiny"></span></div>
+
+<section class="card hero">
+  <div class="clock" id="clock">--:--:--</div>
+  <div class="lbl" style="margin-top:8px">Hoje</div>
+  <div class="state" id="state">—</div>
+  <div class="sub" id="dateTxt"></div>
+  <div class="ref"><span>Dia de referência (trabalho)</span><input type="date" id="ref"></div>
+</section>
+
+<section class="card">
+  <div class="row"><span class="lbl">Próximo alarme</span><button class="ghost" id="test">▷ Testar</button></div>
+  <div class="next mono" id="nextT">--:--</div>
+  <div class="sub" id="nextS">Configure um alarme</div>
+</section>
+
+<section class="card">
+  <div class="row"><span class="lbl">Próximos 14 dias</span><span class="leg"><span style="color:var(--ac)">Trab.</span><span style="color:var(--off)">Folga</span></span></div>
+  <div class="days" id="days"></div>
+</section>
+
+<section class="card">
+  <div class="row"><span class="lbl">Alarmes</span><span class="mono sub" id="cnt"></span></div>
+  <div id="list"></div>
+  <div class="form" id="form">
+    <input type="time" id="fT" value="04:30">
+    <div class="seg" id="fType"><button data-t="work" class="sel">Trabalho</button><button data-t="off">Folga</button><button data-t="all">Todos os dias</button></div>
+    <input type="text" id="fN" placeholder="Nome (opcional)" maxlength="30">
+    <button class="btn pri" id="save" style="margin:0">Salvar alarme</button>
+    <button class="btn" id="cancel" style="margin:0">Cancelar</button>
+  </div>
+  <button class="btn" id="add">＋ Adicionar alarme</button>
+</section>
+
+<section class="card">
+  <div class="row"><span class="lbl">Música do alarme</span><span class="sub" style="font-size:12px">toque em ▶ para ouvir</span></div>
+  <div class="drop">
+    <b>♫ Música do meu celular</b><span id="fileInfo">Escolha qualquer arquivo de áudio do aparelho</span>
+    <label class="btn" style="display:block;position:relative;overflow:hidden;text-align:center">Escolher música do celular<input type="file" id="file" accept="audio/*" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:100px"></label>
+  </div>
+  <div id="sounds"></div>
+</section>
+
+<p class="foot">Mantenha esta página aberta para o alarme tocar. Seus horários ficam salvos neste aparelho. Use também o despertador nativo como reserva.</p>
+</main>
+
+<div id="ring"><div class="lbl">Alarme</div><div class="big mono" id="rT">--:--</div><div id="rN" class="sub"></div>
+<button class="btn pri" id="stop">Parar</button><button class="btn" id="snz">Soneca 5 min</button></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const pad=n=>String(n).padStart(2,'0');
+const iso=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const sod=d=>new Date(d.getFullYear(),d.getMonth(),d.getDate());
+const KEY='a1236v1';
+let S={ref:iso(new Date()),alarms:[{id:1,time:'04:30',type:'work',name:'',on:true}],sound:'vento'};
+try{const r=JSON.parse(localStorage.getItem(KEY)||'null');if(r)S=Object.assign(S,r)}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+let snooze=0,fired=new Set(),custom=null,fType='work';
+
+/* ---------- escala ---------- */
+function dayType(d){const [y,m,dd]=S.ref.split('-').map(Number);const r=new Date(y,m-1,dd);
+  const n=Math.round((sod(d)-r)/864e5);return ((n%2)+2)%2===0?'work':'off'}
+const matches=(a,t)=>a.on&&(a.type==='all'||a.type===t);
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+
+/* ---------- IndexedDB (musica do celular) ---------- */
+function idb(){return new Promise((res,rej)=>{const r=indexedDB.open('a1236',1);r.onupgradeneeded=()=>r.result.createObjectStore('f');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+async function idbSet(v){try{const d=await idb();d.transaction('f','readwrite').objectStore('f').put(v,'custom')}catch(e){}}
+async function idbGet(){try{const d=await idb();return await new Promise(res=>{const q=d.transaction('f').objectStore('f').get('custom');q.onsuccess=()=>res(q.result||null);q.onerror=()=>res(null)})}catch(e){return null}}
+
+/* ---------- audio ---------- */
+let ctx=null,cur=null,curId=null;
+const AC=()=>{if(!ctx){const C=window.AudioContext||window.webkitAudioContext;ctx=new C()}if(ctx.state==='suspended')ctx.resume();return ctx};
+function tone(f,t,d,type='sine',g=.25,o){const c=ctx,os=c.createOscillator(),ga=c.createGain();os.type=type;os.frequency.value=f;
+  ga.gain.setValueAtTime(0,t);ga.gain.linearRampToValueAtTime(g,t+.02);ga.gain.exponentialRampToValueAtTime(.0001,t+d);
+  os.connect(ga);ga.connect(o||c.destination);os.start(t);os.stop(t+d+.05)}
+const SND=[
+ {id:'amanhecer',n:'Amanhecer',d:'Tranquila · cordas suaves',p:4,f:t=>{[261.6,329.6,392,523.3,392,329.6].forEach((q,i)=>{tone(q,t+i*.6,1.6,'sine',.2);tone(q*2,t+i*.6,1,'sine',.05)})}},
+ {id:'sino',n:'Sino Clássico',d:'Brilhante · sino de alarme',p:2.4,f:t=>{for(let i=0;i<4;i++){const s=t+i*.45;tone(880,s,.9,'sine',.3);tone(2112,s,.5,'sine',.12);tone(1320,s,.6,'sine',.1)}}},
+ {id:'turno',n:'Turno da Noite',d:'Marcante · sintetizador',p:2,f:t=>{const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=1800;lp.connect(ctx.destination);[220,277,330,440,330,277,220,330].forEach((q,i)=>tone(q,t+i*.24,.22,'sawtooth',.14,lp))}},
+ {id:'vento',n:'Vento Sul',d:'Leve · sinos longos',p:5,f:t=>{[329.6,246.9,392,293.7].forEach((q,i)=>{tone(q,t+i*1.2,3.2,'sine',.22);tone(q*3,t+i*1.2,1.4,'sine',.04)})}},
+ {id:'travessia',n:'Travessia',d:'Calma · violão dedilhado',p:3.2,f:t=>{[196,247,294,392,294,247,330,392].forEach((q,i)=>{tone(q,t+i*.38,.9,'triangle',.25);tone(q*2,t+i*.38,.3,'sine',.06)})}}
+];
+function stopSound(){if(cur){cur();cur=null}curId=null;paint()}
+function startSound(id){stopSound();curId=id;
+  if(id==='custom'&&custom){AC();let src=null,stopped=false,aud=null;
+    (async()=>{try{const buf=await ctx.decodeAudioData(await custom.blob.arrayBuffer());if(stopped)return;src=ctx.createBufferSource();src.buffer=buf;src.loop=true;src.connect(ctx.destination);src.start()}
+    catch(e){if(stopped)return;try{aud=new Audio(URL.createObjectURL(custom.blob));aud.loop=true;await aud.play()}catch(e2){$('#fileInfo').textContent='Formato não suportado pelo navegador. Tente MP3 ou M4A.'}}})();
+    cur=()=>{stopped=true;try{src&&src.stop()}catch(e){}try{aud&&aud.pause()}catch(e){}}}
+  else{const s=SND.find(x=>x.id===id)||SND[3];AC();const run=()=>s.f(ctx.currentTime+.05);run();const iv=setInterval(run,s.p*1000);cur=()=>{clearInterval(iv)}}
+  paint()}
+function playSel(){const id=(S.sound==='custom'&&custom)?'custom':(S.sound==='custom'?'vento':S.sound);startSound(id)}
+
+/* ---------- toque ---------- */
+let ringing=false;
+function ring(a){if(ringing)return;ringing=true;playSel();
+  $('#rT').textContent=a?a.time:'Soneca';$('#rN').textContent=a&&a.name?a.name:'Hora de acordar';$('#ring').classList.add('open');
+  try{navigator.vibrate&&navigator.vibrate([500,300,500,300,500])}catch(e){}
+  try{if(Notification.permission==='granted')new Notification('Alarme '+(a?a.time:''),{body:a&&a.name||'Hora de acordar'})}catch(e){}}
+function endRing(){ringing=false;stopSound();$('#ring').classList.remove('open')}
+$('#stop').onclick=endRing;
+$('#snz').onclick=()=>{endRing();snooze=Date.now()+5*60000;render()};
+$('#test').onclick=()=>ring({time:'Teste',name:'Teste do alarme'});
+
+/* ---------- tick ---------- */
+function tick(){const n=new Date();
+  $('#clock').textContent=pad(n.getHours())+':'+pad(n.getMinutes())+':'+pad(n.getSeconds());
+  $('#tiny').textContent=$('#clock').textContent;
+  const t=dayType(n);const st=$('#state');st.textContent=t==='work'?'Trabalho':'Folga';st.className='state '+t;
+  $('#dateTxt').textContent=cap(n.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'}));
+  const hm=pad(n.getHours())+':'+pad(n.getMinutes());
+  S.alarms.forEach(a=>{const k=iso(n)+a.id+a.time;if(matches(a,t)&&a.time===hm&&!fired.has(k)){fired.add(k);ring(a)}});
+  if(snooze&&Date.now()>=snooze){snooze=0;ring({time:hm,name:'Soneca'})}
+  nextAlarm()}
+function nextAlarm(){const n=new Date();let best=null,ba=null;
+  for(let i=0;i<15;i++){const d=new Date(n.getFullYear(),n.getMonth(),n.getDate()+i);const t=dayType(d);
+    S.alarms.forEach(a=>{if(!matches(a,t))return;const [h,m]=a.time.split(':').map(Number);const dt=new Date(d.getFullYear(),d.getMonth(),d.getDate(),h,m);
+      if(dt>n&&(!best||dt<best)){best=dt;ba=a}})}
+  if(snooze&&(!best||snooze<best)){best=new Date(snooze);ba={time:pad(best.getHours())+':'+pad(best.getMinutes())}}
+  if(!best){$('#nextT').textContent='--:--';$('#nextS').textContent='Configure um alarme';return}
+  const mins=Math.ceil((best-n)/60000),h=Math.floor(mins/60),m=mins%60;
+  $('#nextT').textContent=pad(best.getHours())+':'+pad(best.getMinutes());
+  $('#nextS').textContent=best.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'short'}).replace('.','')+' · em '+(h?h+'h ':'')+m+'min'}
+
+/* ---------- render ---------- */
+function render(){
+  $('#ref').value=S.ref;
+  const n=new Date(),box=$('#days');box.innerHTML='';
+  for(let i=0;i<14;i++){const d=new Date(n.getFullYear(),n.getMonth(),n.getDate()+i),t=dayType(d);
+    const e=document.createElement('div');e.className='day '+t+(i?'':' today');
+    e.innerHTML='<small>'+d.toLocaleDateString('pt-BR',{weekday:'short'}).replace('.','').toUpperCase()+'</small><b>'+pad(d.getDate())+'</b><i></i>';box.appendChild(e)}
+  $('#cnt').textContent=S.alarms.length+'/10';
+  const L=$('#list');L.innerHTML='';
+  S.alarms.forEach(a=>{const r=document.createElement('div');r.className='al';
+    const tl={work:'Trabalho',off:'Folga',all:'Todos'}[a.type];
+    r.innerHTML='<input type="time" value="'+a.time+'"><span class="badge '+a.type+'">'+tl+'</span><span class="sp sub" style="font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span><button class="tg '+(a.on?'on':'')+'" aria-label="Ativar"></button><button class="ghost" aria-label="Excluir">🗑</button>';
+    r.querySelector('.sp').textContent=a.name;
+    r.querySelector('input').onchange=e=>{a.time=e.target.value||a.time;save();tick()};
+    r.querySelector('.tg').onclick=()=>{a.on=!a.on;save();render();tick()};
+    r.querySelector('.ghost').onclick=()=>{S.alarms=S.alarms.filter(x=>x!==a);save();render();tick()};
+    L.appendChild(r)});
+  $('#add').style.display=S.alarms.length>=10?'none':'';
+  paint();tick()}
+function paint(){const box=$('#sounds');box.innerHTML='';
+  const items=[];if(custom)items.push({id:'custom',n:custom.name,d:'Do seu celular'});
+  SND.forEach(s=>items.push(s));
+  items.forEach(s=>{const r=document.createElement('div');r.className='snd';
+    r.innerHTML='<button class="pl '+(curId===s.id?'on':'')+'">'+(curId===s.id?'■':'▶')+'</button><div class="t"><b></b><span>'+s.d+'</span></div><button class="rd '+(S.sound===s.id?'sel':'')+'">'+(S.sound===s.id?'✓':'')+'</button>';
+    r.querySelector('b').textContent=s.n;
+    r.querySelector('.pl').onclick=()=>{curId===s.id?stopSound():startSound(s.id)};
+    r.querySelector('.rd').onclick=()=>{S.sound=s.id;save();paint()};
+    box.appendChild(r)});
+  $('#fileInfo').textContent=custom?('Selecionada: '+custom.name):'Escolha qualquer arquivo de áudio do aparelho'}
+
+/* ---------- eventos ---------- */
+$('#ref').onchange=e=>{if(e.target.value){S.ref=e.target.value;save();render()}};
+$('#add').onclick=()=>{$('#form').classList.add('open');$('#add').style.display='none';
+  try{if('Notification' in window&&Notification.permission==='default')Notification.requestPermission()}catch(e){}};
+$('#cancel').onclick=()=>{$('#form').classList.remove('open');render()};
+document.querySelectorAll('#fType button').forEach(b=>b.onclick=()=>{fType=b.dataset.t;document.querySelectorAll('#fType button').forEach(x=>x.classList.toggle('sel',x===b))});
+$('#save').onclick=()=>{if(S.alarms.length>=10)return;
+  S.alarms.push({id:Date.now(),time:$('#fT').value||'07:00',type:fType,name:$('#fN').value.trim(),on:true});
+  S.alarms.sort((a,b)=>a.time.localeCompare(b.time));$('#fN').value='';save();$('#form').classList.remove('open');render()};
+$('#file').onchange=async e=>{const f=e.target.files[0];if(!f)return;
+  try{custom={blob:new Blob([await f.arrayBuffer()],{type:f.type||'audio/mpeg'}),name:f.name.replace(/\.[^.]+$/,'')};
+  e.target.value='';
+  S.sound='custom';save();paint();startSound('custom');await idbSet({blob:custom.blob,name:custom.name})}
+  catch(err){$('#fileInfo').textContent='Não consegui ler esse arquivo. Tente outro.'}};
+document.addEventListener('pointerdown',()=>{try{AC()}catch(e){}},{once:true});
+document.addEventListener('visibilitychange',tick);
+
+(async()=>{const c=await idbGet();if(c&&c.blob)custom=c;else if(S.sound==='custom')S.sound='vento';render();setInterval(tick,1000)})();
+</script>
+</body>
+</html>
